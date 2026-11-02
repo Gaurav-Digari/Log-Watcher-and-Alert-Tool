@@ -4,6 +4,7 @@ usage(){
     echo
     echo "Usage : ./file_name.sh  -argument"
     echo
+    echo "Make sure the log  file you provide should be in this structure YYYY-MM-DD HH:MM:SS SEVERITY MESSAGE"
     echo "Options:"
     echo "-h  Help menu"
     echo "-p  Log file with file path"
