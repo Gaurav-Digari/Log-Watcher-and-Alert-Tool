@@ -57,3 +57,32 @@ do
     exit 1 ;;
   esac
 done
+
+for level in "${levels[@]}"
+do 
+  case "$level" in
+    0)
+     severity="EMERGENCY";;
+    1)
+     severity="CRITICAL" ;;
+    2)
+      severity="ALERT" ;;
+    3)
+      severity="ERROR";;
+    4)
+      severity="WARNING" ;;
+    5)
+      severity="NOTICE" ;;
+    6)
+      severity="INFO";;
+    7)
+     severity="DEBUG" ;;
+    *)
+      echo "Invalid level: $level"; 
+      continue ;;
+    esac
+
+    severity_levels+=($severity)
+done
+    
+
