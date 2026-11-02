@@ -42,3 +42,18 @@ check_file() {
         exit 1
     fi
 }
+
+while getopts ":hp:f:k:" opt
+do
+  case $opt in
+  p) file="$OPTARG"
+    check_path ;;
+  f) file="$OPTARG"
+    check_file;;
+  k) IFS=',' read -ra levels <<< "$OPTARG";;
+  h) usage
+  exit 1 ;;
+  *) usage 
+    exit 1 ;;
+  esac
+done
