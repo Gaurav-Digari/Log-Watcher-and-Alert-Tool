@@ -1,5 +1,4 @@
-#!/bin/bash
-
+#/bin/bash  
 usage(){
     echo "========Log Watcher and Alert Tool========"
     echo
@@ -17,9 +16,9 @@ usage(){
 }
 
 check_path() {
-    local temp=$(dirname "$path")
+    local temp=$(dirname "$file")
     if [ -d "$temp" ]; then 
-        if [ -f "$path" ];then
+        if [ -f "$file" ]; then
         log=$(basename "$path")
         return
         else
@@ -84,7 +83,23 @@ do
 
     severity_levels+=("$severity")
 done
-    
+
+cleanup ()
+{ 
+    echo "CLOSING THE PROGRAM"
+    read -p "DO YOU WANT TO DELETE THE LOG FILE WHICH IS CREATED (yes/no) :" choice
+    choice=${choice,,}
+
+    if [ "$choice" = "yes" ]; then
+       rm watch.log
+       echo "Removed Sucessfully"
+    fi
+    exit 0
+
+}
+
+trap cleanup SIGINT
+
 tail -n +1 -f "$file" | awk -v levels="$(IFS=,; echo "${severity_levels[*]}")" '
 BEGIN {
     n=split(levels, arr, ",")
@@ -97,4 +112,5 @@ BEGIN {
             break
         }
     }
-}' | tee -a watch.log
+}' |  tee -a watch.log
+
