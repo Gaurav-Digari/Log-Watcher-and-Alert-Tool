@@ -16,4 +16,29 @@ usage(){
     echo "Don't use -p and -f together use only 1 at a time"
 }
 
-usage
+check_path() {
+    local temp=$(dirname "$path")
+    if [ -d "$temp" ]; then 
+        if [ -f "$path" ];then
+        log=$(basename "$path")
+        return
+        else
+           echo "File Does not exists in your given path check Your path/file"
+           exit 1
+        fi
+    else 
+        echo "Path does not check Your path"
+        exit 1
+    fi
+}
+
+check_file() {
+    local temp="$file"
+    if [ -s "$temp" ];then
+        log="$file"
+        return
+    else
+        echo "File Does not exists check Your file"
+        exit 1
+    fi
+}
