@@ -42,6 +42,34 @@ check_file() {
     fi
 }
 
+check_watch_log() {
+
+    if [ -s "watch.log" ]; then
+
+        echo "Existing watch.log file found."
+        read -p "Do you want to append or overwrite? (a/o): " choice
+
+        case "${choice,,}" in
+
+            a)
+                echo "New logs will be appended."
+                ;;
+
+            o)
+                > watch.log
+                echo "Previous logs cleared. Starting fresh."
+                ;;
+
+            *)
+                echo "Invalid choice. Exiting."
+                exit 1
+                ;;
+
+        esac
+
+    fi
+}
+
 while getopts ":hp:f:k:" opt
 do
   case $opt in
@@ -100,6 +128,9 @@ cleanup ()
 
 trap cleanup SIGINT
 
+
+check_watch_log 
+
 tail -n +1 -f "$file" | awk -v levels="$(IFS=,; echo "${severity_levels[*]}")" '
 BEGIN {
     n=split(levels, arr, ",")
@@ -112,5 +143,5 @@ BEGIN {
             break
         }
     }
-}' |  tee -a watch.log
+}' | tee -a watch.log
 
