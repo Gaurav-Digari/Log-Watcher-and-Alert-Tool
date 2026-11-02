@@ -82,7 +82,19 @@ do
       continue ;;
     esac
 
-    severity_levels+=($severity)
+    severity_levels+=("$severity")
 done
     
-
+tail -n +1 -f "$file" | awk -v levels="$(IFS=,; echo "${severity_levels[*]}")" '
+BEGIN {
+    n=split(levels, arr, ",")
+}
+{
+    for (i=1;i<=n;i++) {
+        if(toupper($3)==arr[i]) {
+            print $0
+            fflush()
+            break
+        }
+    }
+}' | tee -a watch.log
